@@ -1,0 +1,16 @@
+version: '3'
+
+services: 
+  oracle-db:
+    image: oracleinanutshell/oracle-xe-11g:latest
+    ports:
+      - 1521:1521
+      - 5500:5500
+      - 8181:8080
+    volumes:
+      - ./docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d
+  redis:
+    image: redis
+    command: redis-server --requirepass Redis2019!
+    ports:
+      - 6379:6379

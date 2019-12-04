@@ -1,0 +1,235 @@
+<div  style="margin-left: 0%; width: 100%">
+
+  <div class="box box-info sombra">
+    <div class="box-header with-border">
+      <h3 class="box-title">Car Registration</h3>
+    </div>
+
+    <form class="form-group" #form="ngForm">
+
+      <div [ngClass]="classCss" role="alert" *ngIf="message">
+          <strong>{{ message.text }}</strong>
+      </div>
+
+      <div class="box-body">
+
+        <div class="form-group">
+
+            <p-blockUI [target]="ptable" [blocked]="blockedPtable">
+            </p-blockUI>
+
+            <p-table #ptable id="ptable" [value]="cars" selectionMode="single" [(selection)]="selectedCar" (onRowSelect)="copy()" 
+              dataKey="id" [scrollable]="true" scrollHeight="100px" (onRowUnselect)="onRowUnselect($event)">
+              <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 10%">Id</th>
+                        <th style="width: 5%">Year</th>
+                        <th>Brand</th>
+                        <th>Color</th>
+                        <th>Price</th>
+                        <th>Date Sale</th>
+                        <th>Status</th> 
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-car>
+                    <tr [pSelectableRow]="car" >
+                        <td style="width: 10%">{{car.id}}</td>
+                        <td style="width: 5%">{{car.year}}</td>
+                        <td>{{car.brand}}</td>
+                        <td>{{car.color?.nome}}</td>
+                        <td>{{car.price | currencyFormat:'BRL'}}</td>
+                        <td>{{car.saleDate}}</td>
+                        <td>{{ car.status | statusLabel }}</td> 
+                    </tr>
+                </ng-template>
+              <ng-template pTemplate="summary">
+                  <div style="text-align: left">
+                      <!-- Selected Car: {{selectedCar ? selectedCar.vin + ' - ' + selectedCar.brand + ' - ' + selectedCar.year + ' - ' + selectedCar.color?.name: 'none'}} -->
+                  </div>
+              </ng-template>
+          </p-table>
+
+        </div>
+        
+        <div class="form-group col-sm-3">
+            <label for="inputid" class="control-label">Id</label>
+            <input type="text" 
+                   disabled=true
+                   class="form-control" 
+                   id="inputid" 
+                   placeholder="id"
+                   name="id"
+                   [(ngModel)]="selectedCar.id"
+                   #id="ngModel"
+                   pInputText
+                   >
+        </div>
+
+        <div class="form-group col-sm-5" [ngClass]="getFormGroupClass(brand.invalid,brand.dirty)">
+            <label for="inputbrand" class="control-label">Brand</label>
+            <input type="text" 
+                   class="form-control" 
+                   id="inputbrand" 
+                   placeholder="brand"
+                   name="brand"
+                   [(ngModel)]="selectedCar.brand"
+                   #brand="ngModel"
+                   required
+                   pInputText
+                   (keyup)="navigate()"
+                   >
+        </div>
+
+        <div class="form-group col-sm-3">
+            <label for="inputstatus" class="control-label">Status</label>
+            <div class="form-group">
+                <p-dropdown 
+                    [options]="listsService.status"
+                    id="inputstatus" 
+                    name="status"
+                    [(ngModel)]="selectedCar.status"
+                    #status="ngModel" 
+                    [style]="{'width':'100%'}"
+                    (onChange)="navigate()"
+                ></p-dropdown>
+            </div>
+        </div>
+        
+        <div class="form-group col-sm-3">
+            <label for="inputyear" class="control-label">Year</label>
+            <div class="form-group">
+              <p-spinner 
+                    thousandSeparator=""
+                    id="inputyear" 
+                    placeholder="year"
+                    name="year"
+                    [(ngModel)]="selectedCar.year"
+                    #year="ngModel"
+                    [style]="{'width':'100%'}"
+                    (keyup)="navigate()"
+                    ></p-spinner>
+            </div>       
+        </div>
+
+        <div class="form-group col-sm-3">
+            <label for="inputcolor" class="control-label">Color</label>
+            <div class="form-group">
+                <p-dropdown 
+                    [options]="listsService.colors"
+                    id="inputcolor" 
+                    name="color"
+                    [(ngModel)]="selectedCar.color"
+                    #color="ngModel"saleDate 
+                    [style]="{'width':'100%'}"
+                    (onChange)="navigate()"
+                ></p-dropdown>
+            </div>
+        </div>
+
+        <div class="form-group col-sm-3">
+            <label for="inputprice" class="control-label">Price</label>
+
+            <div class="form-group">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">R$</span>
+                    <input 
+                        pInputText
+                        currencyMask                         
+                        [options]="{ prefix: '',thousands: '.', decimal: ',' }"
+                        class="form-control" 
+                        id="inputprice" 
+                        placeholder="price"
+                        name="price"
+                        [(ngModel)]="selectedCar.price"
+                        #price="ngModel"
+                        (keyup)="navigate()"
+                        />
+                </div>        
+            </div>
+        </div>
+
+        <div class="form-group col-sm-3">
+            
+            <label for="inputsaleDate" class="control-label">Sale Date</label>    
+            
+            <app-div-p-calendar uimd='ui-md-10'>
+                <p-calendar
+                        id="inputsaleDate" 
+                        name="saleDate"
+                        [(ngModel)]="selectedCar.saleDate"
+                        #saleDate="ngModel"
+                        dateFormat="dd/mm/yy"
+                        showIcon=true
+                        dataType="string"
+                        placeholder="sale date"
+                        (onInput)="navigate()"
+                        (onSelect)="navigate()"
+                        ></p-calendar>
+            </app-div-p-calendar>   
+             
+        </div> 
+
+      </div>
+      
+      <div class="box-footer">
+
+        <app-button-confirm 
+                btnid="btnsave"
+                dlgid="dlgsave"
+                label="Save" 
+                class="ui-button-rounded pull-right" 
+                [disabled]="!btnSalvar" 
+                title="Save" 
+                message="Deseja realmente salvar este registro" 
+                (confiormClick)="saveCar()"
+                ></app-button-confirm>
+
+        <span class="pull-right">&nbsp;</span>
+
+        <app-button-confirm 
+                btnid="btncancel"
+                dlgid="dlgcancel"
+                label="Cancel" 
+                class="ui-button-rounded pull-right" 
+                [disabled]="!btnCancelar" 
+                title="Cancel" 
+                message="Deseja realmente cancelar este registro" 
+                (confiormClick)="cancel()" 
+                ></app-button-confirm>
+
+        <span class="pull-right">&nbsp;</span>
+
+        <app-button-confirm 
+                btnid="btnnew"
+                dlgid="dlgnew"
+                label="New" 
+                class="ui-button-rounded pull-right" 
+                [disabled]="!btnNovo" 
+                title="New" 
+                message="Deseja realmente incluir um novo registro?" 
+                (confiormClick)="novo()"
+                ></app-button-confirm>
+
+        <span class="pull-right">&nbsp;</span>
+
+        <app-button-confirm 
+                btnid="btndelete"
+                dlgid="dlgdelete"
+                label="Delete" 
+                class="ui-button-rounded pull-right" 
+                [disabled]="!btnDeletar" 
+                title="Delete" 
+                message="Deseja realmente excluir este registro?" 
+                (confiormClick)="deleteCar()"
+                ></app-button-confirm>
+        
+        <button pButton type="button" label="Find"  id="btnfind"  (click)="findCarParams()" class="ui-button-rounded pull-left" ></button> 
+        <button pButton type="button" label="Clear" id="btnclean" (click)="clear()" class="ui-button-rounded pull-left" ></button>
+        <button pButton type="button" label="Print" id="btnprint" (click)="printCars()" [disabled]="!btnPrint" class="ui-button-rounded pull-left" ></button>  
+         
+      </div>
+    </form>
+
+  </div>
+
+</div>

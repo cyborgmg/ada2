@@ -1,0 +1,20 @@
+<header class="main-header">
+
+  <a [routerLink]="['/']" class="logo" style="width: 12%;">
+    <span class="logo-mini"><b>Help</b>LT</span>
+    <span class="logo-lg"><b>MCM</b></span>
+  </a>
+
+  <nav class="navbar navbar-static-top" style="margin-left: 12%;">
+    <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+      <span class="sr-only">Toggle navigation</span>
+    </a>
+    <div class="navbar-custom-menu">
+      <p id="emailprofile" #emailprofile style="color: white">{{ getEmailProfile() }} 
+        <button class="btn btn-link" (click)="singOut()" >
+          <font style="color: white" > Sing out </font>
+        </button> 
+      </p>
+    </div>
+  </nav>
+</header>
