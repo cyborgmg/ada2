@@ -77,7 +77,7 @@ public class UserController {
 		if(user.getPassword()==null) {
 			result.addError(new ObjectError("User", "Password no information"));
 		}
-		if(user.getProfile()==null) {
+		if(user.getPerfils().size()<1) {
 			result.addError(new ObjectError("User", "Profile no information"));
 		}
 	}
@@ -91,7 +91,7 @@ public class UserController {
 				result.getAllErrors().forEach(error-> response.getErrors().add(error.getDefaultMessage()));
 				return ResponseEntity.badRequest().body(response);
 			}
-			List<User> userlocks = userService.findUserParams(user.getEmail(), user.getProfile());
+			List<User> userlocks = userService.findUserParams(user.getEmail());
 			response.setData(userlocks);
 		} catch (Exception e) {
 			response.getErrors().add(e.getMessage());
@@ -121,7 +121,8 @@ public class UserController {
 		response.setData(users);		
 		return ResponseEntity.ok(response);	
 	}
-	
+	/*EM CONSTRUÇÃO*/
+	/*
 	@PostMapping("/print")
 	@PreAuthorize("hasAnyRole('ADMIN','CUSTUMER','TECHNICIAN')")
 	public ResponseEntity<byte[]> printAll(HttpServletRequest request, @RequestBody List<User> users, BindingResult result) throws JRException, IOException {
@@ -132,4 +133,5 @@ public class UserController {
 		return ResponseEntity.ok(reportUser.print("reports/reportUsers.jrxml", new HashMap<>(), users));
 		
 	}	
+	*/
 }

@@ -1,0 +1,4 @@
+br/com/adaApi/api/security/controller/AuthenticationRestControllerTest.class
+br/com/adaApi/adaApiApplicationTests.class
+br/com/adaApi/api/controller/CarControllerTest.class
+br/com/adaApi/api/repository/CarRepositoryTest.class

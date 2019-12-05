@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import br.com.adaApi.api.entity.Profile;
 import br.com.adaApi.api.entity.User;
 import br.com.adaApi.api.enums.ProfileEnum;
 
@@ -17,12 +18,17 @@ public class JwtUserFactory {
 		return new JwtUser(user.getId(), 
 						   user.getEmail(), 
 						   user.getPassword(), 
-						   mapToGrantedAuthorities(user.getProfile()) );	
+						   mapToGrantedAuthorities(user.getPerfils()) );	
 	}
 	
-	private static List<GrantedAuthority> mapToGrantedAuthorities(ProfileEnum profileEnum){
+	private static List<GrantedAuthority> mapToGrantedAuthorities(List<Profile> perfils){
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-		authorities.add(new SimpleGrantedAuthority(profileEnum.toString()));
+		
+		for (Profile perfil : perfils) {
+			
+			authorities.add(new SimpleGrantedAuthority( perfil.getProfile().toString() ));
+		}
+		
 		return authorities;
 	}
 }

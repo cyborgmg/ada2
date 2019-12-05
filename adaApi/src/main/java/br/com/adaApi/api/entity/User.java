@@ -1,38 +1,28 @@
 package br.com.adaApi.api.entity;
 
 import java.io.Serializable;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.NamedQuery;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-import br.com.adaApi.api.enums.ProfileEnum;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
- * The persistent class for the "USER" database table.
+ * The persistent class for the USUARIO database table.
  * 
  */
 @Entity
-@Table(name = "USUARIO")
-@NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")
+@Table(name="USUARIO")
+@NamedQuery(name="User.findAll", query="SELECT u FROM User u")
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "USER_ID_GENERATOR", sequenceName = "USER_SQ", allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USER_ID_GENERATOR")
-	private Long id;
+	@SequenceGenerator(name="USUARIO_ID_GENERATOR", sequenceName="USER_SQ", allocationSize = 1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="USUARIO_ID_GENERATOR")
+	private long id;
 
 	@Column(unique = true)
 	@NotBlank(message = "Email requerido")
@@ -41,31 +31,25 @@ public class User implements Serializable {
 
 	private String password;
 
-	
-	@Enumerated(EnumType.STRING)
-	@Column(name = "PERFIL")
-	private ProfileEnum profile;
-	
-	
-	/*
-	@ManyToMany(mappedBy="usuarios")
-	private List<Perfil> perfils;
-	*/
+	//bi-directional many-to-one association to Profile
+	@OneToMany(mappedBy="usuario", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private List<Profile> perfils = new ArrayList<Profile>();
+
 	public User() {
 	}
-
-	public User(@NotBlank(message = "Email requerido") @Email(message = "Email inválido") String email, String password, ProfileEnum profile) {
+	
+	public User(@NotBlank(message = "Email requerido") @Email(message = "Email inválido") String email, String password, List<Profile> perfils) {
 		super();
 		this.email = email;
 		this.password = password;
-		this.profile = profile;
+		this.perfils = perfils;
 	}
 
-	public Long getId() {
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(Long id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -85,22 +69,26 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
-	public ProfileEnum getProfile() {
-		return profile;
-	}
-
-	public void setProfile(ProfileEnum profile) {
-		this.profile = profile;
-	}
-	
-	
-/*
-	public List<Perfil> getPerfils() {
+	public List<Profile> getPerfils() {
 		return this.perfils;
 	}
 
-	public void setPerfils(List<Perfil> perfils) {
+	public void setPerfils(List<Profile> perfils) {
 		this.perfils = perfils;
 	}
-*/
+
+	public Profile addPerfil(Profile perfil) {
+		getPerfils().add(perfil);
+		perfil.setUsuario(this);
+
+		return perfil;
+	}
+
+	public Profile removePerfil(Profile perfil) {
+		getPerfils().remove(perfil);
+		perfil.setUsuario(null);
+
+		return perfil;
+	}
+
 }

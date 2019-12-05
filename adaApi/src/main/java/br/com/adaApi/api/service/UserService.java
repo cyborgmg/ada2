@@ -19,6 +19,6 @@ public interface UserService {
 	
 	Page<User> findAll(int page, int count);
 
-	List<User> findUserParams(String email, ProfileEnum profile);
+	List<User> findUserParams(String email);
 
 }

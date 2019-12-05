@@ -52,12 +52,11 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public List<User> findUserParams(String email, ProfileEnum profile){
+	public List<User> findUserParams(String email){
 		
 		String semail = ((email!=null)&&(!email.isEmpty()))?email:"";
-		String sprofile = (profile!=null)?profile.name():"";
 		
-		List<User> users = userRepository.findUserParams(semail, sprofile);
+		List<User> users = userRepository.findUserParams(semail);
 		
 		users.forEach( (User user) -> {
 			user.setPassword(null);

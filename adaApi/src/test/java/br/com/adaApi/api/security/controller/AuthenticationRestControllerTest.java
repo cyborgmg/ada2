@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import br.com.adaApi.api.entity.Profile;
 import br.com.adaApi.api.entity.User;
 import br.com.adaApi.api.enums.ProfileEnum;
 import br.com.adaApi.api.repository.UserRepository;
@@ -66,12 +67,12 @@ public class AuthenticationRestControllerTest {
             .apply(springSecurity())
             .build();
     }
-    
+    /*
     @After
     public void finalize() {
     	userRepository.deleteAll();
     }
-
+*/
     @Test
     @WithAnonymousUser
     public void successfulAuthenticationWithAnonymousUser() throws Exception {
@@ -93,7 +94,8 @@ public class AuthenticationRestControllerTest {
         user.setId(0L);
         user.setEmail("admin@helpdesk.com");
         user.setPassword("123456");
-        user.setProfile(ProfileEnum.ROLE_ADMIN);
+        //user.setProfile(ProfileEnum.ROLE_ADMIN);
+        user.getPerfils().add(new Profile(ProfileEnum.ROLE_ADMIN,user));
         
         JwtUser jwtUser = JwtUserFactory.create(user);
 
@@ -112,11 +114,14 @@ public class AuthenticationRestControllerTest {
     @WithMockUser(roles = "ADMIN")
     public void successfulGetTokenAdminRole() throws Exception {
 
+    	userRepository.deleteAll();
+    	
     	User user = new User();
         user.setId(0L);
         user.setEmail("admin@helpdesk.com");
         user.setPassword("123456");
-        user.setProfile(ProfileEnum.ROLE_ADMIN);
+        //user.setProfile(ProfileEnum.ROLE_ADMIN);
+        user.getPerfils().add(new Profile(ProfileEnum.ROLE_ADMIN,user));
         
         userRepository.save(user);
         

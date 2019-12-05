@@ -66,28 +66,28 @@ public class JwtTokenUtil implements Serializable{
 	}
 	
 	private Claims getClaimsFromToken(String token) {
-		Claims claims;
+		Claims claims=null;
 		
-		try {
-			
-			
-			Map<String, Object>  claimsRedis = Utils.deserializeJson(redisService.getJedis().get(token),HashMap.class);
-			
-			String sub = (String) claimsRedis.get(CLAIM_KEY_USERNAME);
-			Long exp = (Long) claimsRedis.get(CLAIM_KEY_EXPIRA);
-			
-			claims = Jwts.parser()
-					 .setSigningKey(secret)
-					 .parseClaimsJws(token)
-					 .getBody()
-					 .setSubject(sub)
-					 .setExpiration( new Date( exp ) );
-			
-		} catch (Exception e) {
-			claims = null;
-			e.printStackTrace();
+		if(token!=null) {
+			try {
+				
+				
+				Map<String, Object>  claimsRedis = Utils.deserializeJson(redisService.getJedis().get(token),HashMap.class);
+				
+				String sub = (String) claimsRedis.get(CLAIM_KEY_USERNAME);
+				Long exp = (Long) claimsRedis.get(CLAIM_KEY_EXPIRA);
+				
+				claims = Jwts.parser()
+						 .setSigningKey(secret)
+						 .parseClaimsJws(token)
+						 .getBody()
+						 .setSubject(sub)
+						 .setExpiration( new Date( exp ) );
+				
+			} catch (Exception e) {
+				claims = null;
+			}
 		}
-		
 		
 		return claims;
 	}
