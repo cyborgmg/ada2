@@ -42,7 +42,7 @@ public class adaApiApplication {
 			userRepository.save(admin);
 		}
 		
-		redisService.getJedis().flushAll();
+		redisService.getJedis().flushDB();
 	}
 	
 }

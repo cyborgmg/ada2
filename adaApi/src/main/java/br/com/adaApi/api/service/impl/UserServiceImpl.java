@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import br.com.adaApi.api.entity.Profile;
 import br.com.adaApi.api.entity.User;
 import br.com.adaApi.api.enums.ProfileEnum;
 import br.com.adaApi.api.repository.UserRepository;
@@ -28,6 +29,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User createOrUpdate(User user) {
+		for (Profile profile : user.getPerfils()) {
+			profile.setUsuario(user);
+		}
 		User u = userRepository.save(user);
 		u.setPassword(null);
 		return u;
@@ -46,9 +50,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Page<User> findAll(int page, int count) {
+	public List<User> findAll() {
 		// TODO Auto-generated method stub
-		return userRepository.findAll((Pageable) new PageRequest(page, count));
+		return userRepository.findAll();
 	}
 	
 	@Override

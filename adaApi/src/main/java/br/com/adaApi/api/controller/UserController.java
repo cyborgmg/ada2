@@ -1,14 +1,15 @@
 package br.com.adaApi.api.controller;
 
 import java.io.IOException;
-import java.util.stream.*;
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.adaApi.api.entity.Car;
 import br.com.adaApi.api.entity.User;
 import br.com.adaApi.api.response.Response;
 import br.com.adaApi.api.service.Report;
@@ -57,6 +57,7 @@ public class UserController {
 				return ResponseEntity.badRequest().body(response); 
 			}
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
+			
 			User userPersisted = (User) userService.createOrUpdate(user);
 			response.setData(userPersisted);
 		} catch (DuplicateKeyException de) {
@@ -113,25 +114,24 @@ public class UserController {
 		return ResponseEntity.ok(new Response<String>());
 	}
 
-	@GetMapping(value="{page}/{count}")
+	@GetMapping(value="/findall")
 	@PreAuthorize("hasAnyRole('ADMIN')")
-	public ResponseEntity<Response<Page<User>>> findAll(@PathVariable int page, @PathVariable int count){
-		Response<Page<User>> response = new Response<Page<User>>();
-		Page<User> users = userService.findAll(page, count);		
+	public ResponseEntity<Response<List<User>>> findAll(){
+		Response<List<User>> response = new Response<List<User>>();
+		List<User> users = userService.findAll();		
 		response.setData(users);		
 		return ResponseEntity.ok(response);	
 	}
-	/*EM CONSTRUÇÃO*/
-	/*
+
 	@PostMapping("/print")
 	@PreAuthorize("hasAnyRole('ADMIN','CUSTUMER','TECHNICIAN')")
 	public ResponseEntity<byte[]> printAll(HttpServletRequest request, @RequestBody List<User> users, BindingResult result) throws JRException, IOException {
 		
 		//Ordenando por profile
-		users = users.stream().sorted(Comparator.comparing(User::getProfile)).collect(Collectors.toList());
+		//users = users.stream().sorted(Comparator.comparing(User::getProfile)).collect(Collectors.toList());
 		
 		return ResponseEntity.ok(reportUser.print("reports/reportUsers.jrxml", new HashMap<>(), users));
 		
 	}	
-	*/
+	
 }

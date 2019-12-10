@@ -30,6 +30,9 @@ public class RedisService {
 	
 	@Value("${redis.pass}")
 	private String pass;
+	
+	@Value("${redis.dbindex}")
+	private int dbindex;
 
 	private Jedis jedis;
 	
@@ -37,6 +40,7 @@ public class RedisService {
 	public void init() {
 		jedis = new Jedis(host,port); 
 		jedis.auth(pass);
+		jedis.select(dbindex);
 	}
 
 	public Jedis getJedis() {

@@ -17,8 +17,8 @@ public interface UserService {
 	
 	void delete(Long id);
 	
-	Page<User> findAll(int page, int count);
-
 	List<User> findUserParams(String email);
+
+	List<User> findAll();
 
 }
