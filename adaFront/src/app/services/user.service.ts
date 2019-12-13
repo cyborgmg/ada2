@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { User } from '../model/user.model';
 import { URL_API } from './url.api';
 import { HttpRespPdfReqJsonService } from './http-resp-pdf-req-json.service';
+import { forEach } from '@angular/router/src/utils/collection';
+import { Profile } from '../model/profile';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +35,19 @@ export class UserService {
 
   print(data: any) {
     return HttpRespPdfReqJsonService.post(`${URL_API}/api/user/print`, data);
+  }
+
+  containsProfile( perfils: Array<Profile> , profile: string): any {
+
+    let result = false;
+
+    perfils.forEach(element => {
+      if ( element.profile === profile ) {
+        result = true;
+      }
+    });
+
+    return result;
   }
 
 }

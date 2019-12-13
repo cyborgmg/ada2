@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SharedService } from '../../services/shared.service';
 import { User } from '../../model/user.model';
+import { Profile } from 'src/app/model/profile';
 
 @Component({
   selector: 'app-header',
@@ -14,7 +15,7 @@ export class HeaderComponent implements OnInit {
   constructor() {
 
     this.share = SharedService.getInstance();
-    this.share.user = new User('', '', '', '');
+    this.share.user = new User('', '', '', new Array<Profile>());
 
    }
 
@@ -30,7 +31,7 @@ export class HeaderComponent implements OnInit {
 
   getEmailProfile() {
     if ( this.share.user !== null ) {
-      return `${this.share.user.email} - ${this.share.user.profile}`;
+      return `${this.share.user.email}`;
     } else {
       return '';
     }

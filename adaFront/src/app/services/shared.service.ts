@@ -49,9 +49,9 @@ export class SharedService {
   }
   public set user(value: User) {
     this._user = value;
-    if (this._user != null) {
+    /*if (this._user != null) {
      this._user.profile = this._user.profile.substring(5);
-    }
+    }*/
     localStorage.setItem('user', JSON.stringify(this._user));
   }
 

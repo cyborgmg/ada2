@@ -1,3 +1,4 @@
+import { UserService } from './../../services/user.service';
 import { SharedService } from './../../services/shared.service';
 import { Component, OnInit } from '@angular/core';
 import {MenuItem} from 'primeng/api';
@@ -13,7 +14,7 @@ export class MenuComponent implements OnInit {
 
     private items: Array<MenuItem> = new Array<MenuItem>();
 
-    constructor() {
+    constructor(private userService: UserService) {
     }
 
     ngOnInit() {
@@ -29,7 +30,7 @@ export class MenuComponent implements OnInit {
 
         this.items = new Array<MenuItem>();
 
-        if (this.shared.user.profile === 'ADMIN') {
+        if ( this.userService.containsProfile(this.shared.user.perfils, 'ROLE_ADMIN') === true ) {
             this.items.push({
                 styleClass: 'usermenu',
                 label: 'User',
@@ -40,7 +41,7 @@ export class MenuComponent implements OnInit {
             });
         }
         // tslint:disable-next-line:max-line-length
-        if (this.shared.user.profile === 'ADMIN' || this.shared.user.profile === 'CUSTUMER' || this.shared.user.profile === 'TECHNICIAN') {
+        if (this.userService.containsProfile(this.shared.user.perfils, 'ROLE_ADMIN') === true || this.userService.containsProfile(this.shared.user.perfils, 'ROLE_CUSTUMER') === true || this.userService.containsProfile(this.shared.user.perfils, 'ROLE_TECHNICIAN') === true ) {
             this.items.push({
                 styleClass: 'carmenu',
                 label: 'Cadastro',
@@ -50,6 +51,7 @@ export class MenuComponent implements OnInit {
                 ]
             });
         }
+
     }
 
 }

@@ -135,7 +135,7 @@ export class CadastroUsuarioComponent extends BaseCadastro implements OnInit {
     const idIsNull: boolean = (this.selectedUser.id == null);
     const full: boolean = (this.users.length > 0);
     // tslint:disable-next-line:max-line-length
-    const required: boolean = !Utils.strIsEmpty(this.selectedUser.email) && !Utils.strIsEmpty(this.selectedUser.profile) && !Utils.strIsEmpty(this.selectedUser.password);
+    const required: boolean = !Utils.strIsEmpty(this.selectedUser.email) /*&& (this.selectedUser.profiles.length > 0)*/ && !Utils.strIsEmpty(this.selectedUser.password);
     // tslint:disable-next-line:max-line-length
     const novo: boolean = ( JSON.stringify(this.users[this.users.indexOf(this.selectedUser)]) === JSON.stringify(this.selectedUser) ) && (idIsNull) ;
 
